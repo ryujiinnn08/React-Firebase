@@ -11,8 +11,10 @@ import {
 import "./App.css";
 
 function App() {
-	const [note, setNote] = useState("");
-	const [notes, setNotes] = useState([]);
+	const [name, setName] = useState("");
+	const [course, setCourse] = useState("");
+	const [yearLevel, setYearLevel] = useState("");
+	const [records, setRecords] = useState([]);
 
 	const loadNotes = async () => {
 		const snapshot = await getDocs(collection(db, "notes"));
@@ -27,21 +29,25 @@ function App() {
 			return bTime - aTime;
 		});
 
-		setNotes(items);
+		setRecords(items);
 	};
 
 	const saveNote = async () => {
-		if (!note.trim()) {
-			alert("Please enter a note first.");
+		if (!name.trim() || !course.trim() || !yearLevel) {
+			alert("Please complete Name, Course, and Year Level.");
 			return;
 		}
 
 		await addDoc(collection(db, "notes"), {
-			text: note.trim(),
+			name: name.trim(),
+			course: course.trim(),
+			yearLevel,
 			createdAt: serverTimestamp(),
 		});
 
-		setNote("");
+		setName("");
+		setCourse("");
+		setYearLevel("");
 		await loadNotes();
 	};
 
@@ -57,29 +63,47 @@ function App() {
 	return (
 		<main className="app-page">
 			<section className="card">
-				<p className="eyebrow">Task Note</p>
+				<p className="eyebrow">Student Form</p>
 				<h1>Frontend + Backend</h1>
-				<p className="subtitle">Write a quick note and send it to Firebase.</p>
+				<p className="subtitle">Submit Name, Course, and Year Level to Firebase.</p>
 
-				<div className="input-row">
+				<div className="form-grid">
 					<input
 						type="text"
-						placeholder="Enter note..."
-						value={note}
-						onChange={(e) => setNote(e.target.value)}
+						placeholder="Name"
+						value={name}
+						onChange={(e) => setName(e.target.value)}
 					/>
+					<input
+						type="text"
+						placeholder="Course"
+						value={course}
+						onChange={(e) => setCourse(e.target.value)}
+					/>
+					<select value={yearLevel} onChange={(e) => setYearLevel(e.target.value)}>
+						<option value="">Select Year Level</option>
+						<option value="1">1</option>
+						<option value="2">2</option>
+						<option value="3">3</option>
+						<option value="4">4</option>
+						<option value="5">5</option>
+					</select>
 					<button onClick={saveNote}>Save</button>
 				</div>
 
 				<section className="history">
-					<h2>History</h2>
-					{notes.length === 0 ? (
-						<p className="empty">No notes yet.</p>
+					<h2>Saved Entries</h2>
+					{records.length === 0 ? (
+						<p className="empty">No entries yet.</p>
 					) : (
 						<ul className="history-list">
-							{notes.map((item) => (
+							{records.map((item) => (
 								<li className="history-item" key={item.id}>
-									<span className="history-text">{item.text}</span>
+									<div className="history-text">
+										<strong>{item.name ?? "Unknown"}</strong>
+										<span>{item.course ?? item.text ?? "No course"}</span>
+										<span>Year {item.yearLevel ?? "N/A"}</span>
+									</div>
 									<button
 										type="button"
 										className="delete-btn"

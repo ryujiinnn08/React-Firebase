@@ -47,12 +47,14 @@
   color: var(--text-muted);
 }
 
-.input-row {
-  display: flex;
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 10px;
 }
 
-.input-row input {
+.form-grid input,
+.form-grid select {
   flex: 1;
   border: 1px solid var(--border);
   border-radius: 12px;
@@ -62,12 +64,13 @@
   background: #fff;
 }
 
-.input-row input:focus {
+.form-grid input:focus,
+.form-grid select:focus {
   border-color: #9ab6a7;
   box-shadow: 0 0 0 3px rgba(154, 182, 167, 0.25);
 }
 
-.input-row button {
+.form-grid button {
   border: none;
   border-radius: 12px;
   padding: 12px 18px;
@@ -79,13 +82,17 @@
   transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
-.input-row button:hover {
+.form-grid button:hover {
   background: var(--button-hover);
   transform: translateY(-1px);
 }
 
-.input-row button:active {
+.form-grid button:active {
   transform: translateY(0);
+}
+
+.form-grid button {
+  grid-column: 1 / -1;
 }
 
 .history {
@@ -126,7 +133,18 @@
 }
 
 .history-text {
+  display: grid;
+  gap: 2px;
   overflow-wrap: anywhere;
+}
+
+.history-text strong {
+  font-size: 0.95rem;
+}
+
+.history-text span {
+  font-size: 0.87rem;
+  color: var(--text-muted);
 }
 
 .delete-btn {
@@ -150,11 +168,7 @@
     padding: 20px;
   }
 
-  .input-row {
-    flex-direction: column;
-  }
-
-  .input-row button {
-    width: 100%;
+  .form-grid {
+    grid-template-columns: 1fr;
   }
 }
